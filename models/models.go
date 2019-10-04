@@ -13,7 +13,7 @@ type User struct {
 type Chat struct {
 	ID        int       `json:"id"`
 	Name      string    `json:"name"`
-	UsersID   []int     `json:"users"`
+	Users     []int     `json:"users"`
 	CreatedAt time.Time `json:"created_at"`
 }
 

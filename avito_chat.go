@@ -6,6 +6,8 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"log"
 	"net/http"
+	"database/sql"
+	_ "github.com/bmizerany/pq"
 
 	"avito_chat/models"
 	"avito_chat/repository"
@@ -15,15 +17,13 @@ var repo *repository.PostgresRepository
 
 func main() {
 	var err error
-	// db, err := sql.Open("postgres", "")
-	// if err != nil {
-	// 	log.Println(err)
-	// 	return
-	// }
-	// defer db.Close()
-	// repo, err = repository.NewPostgresRepository(db)
-
-	repo, err = repository.NewPostgresRepository(nil)
+	db, err := sql.Open("postgres", "user=postgres host=db password=example port=5432 sslmode=disable")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer db.Close()
+	repo, err = repository.NewPostgresRepository(db)
 	if err != nil {
 		log.Println(err)
 		return
@@ -46,6 +46,7 @@ func main() {
 		r.Post("/add", sendMessage)
 	})
 
+	log.Println("started listen")
 	http.ListenAndServe(":9000", r)
 }
 
